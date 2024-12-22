@@ -180,6 +180,10 @@ tr:hover {
   grid-template-columns: 1fr 1fr;
 }
 
+.income-section .grid-header {
+  grid-template-columns: 1fr 1fr;
+}
+
 .income-details:hover, .expense-category:hover {
   background: #e9ecef;
 }

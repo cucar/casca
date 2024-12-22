@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { aggregateTransactions, calculateRatios } from './transactionAggregator.js';
+import { formatAmount } from './utils.js';
 
 export function TransactionSummary({ transactions }) {
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -13,24 +14,24 @@ export function TransactionSummary({ transactions }) {
         <div className="transaction-summary">
             {/* Income Section */}
             <section className="income-section">
-                <h2>Deposits: {summary.totalDeposits.toFixed(0)}</h2>
+                <h2>Deposits: {formatAmount(summary.totalDeposits)}</h2>
                 <div className="grid-header">
                     <span>Category</span>
                     <span>Amount</span>
                 </div>
                 <div className="income-details" onClick={() => setSelectedCategory('Salary')}>
                     <span>Salary</span>
-                    <span>${summary.income.salary.toFixed(0)}</span>
+                    <span>{formatAmount(summary.income.salary)}</span>
                 </div>
                 <div className="income-details" onClick={() => setSelectedCategory('OtherIncome')}>
                     <span>Other Income</span>
-                    <span>${summary.income.other.toFixed(0)}</span>
+                    <span>{formatAmount(summary.income.other)}</span>
                 </div>
             </section>
 
             {/* Withdrawals Section */}
             <h2>
-                Withdrawals: {summary.totalWithdrawals.toFixed(0)}
+                Withdrawals: {formatAmount(summary.totalWithdrawals)}
                 {hasWithdrawalWarning && (
                     <span className="warning-icon" title="Withdrawals exceed deposits">⚠️</span>
                 )}
@@ -45,37 +46,37 @@ export function TransactionSummary({ transactions }) {
                 </div>
                 <div className="expense-category" onClick={() => setSelectedCategory('Rent')}>
                     <span>Rent</span>
-                    <span>${summary.expenses.rent.toFixed(0)}</span>
+                    <span>{formatAmount(summary.expenses.rent)}</span>
                     <span>{ratios.rent.toFixed(0)}%</span>
                 </div>
                 <div className="expense-category" onClick={() => setSelectedCategory('Mortgage/Loans')}>
                     <span>Loans</span>
-                    <span>${summary.expenses.mortgageAndLoans.toFixed(0)}</span>
+                    <span>{formatAmount(summary.expenses.mortgageAndLoans)}</span>
                     <span>{ratios.debtToIncome.toFixed(0)}%</span>
                 </div>
                 <div className="expense-category" onClick={() => setSelectedCategory('Bills/Utilities')}>
                     <span>Bills/Utilities</span>
-                    <span>${summary.expenses.billsAndUtilities.toFixed(0)}</span>
+                    <span>{formatAmount(summary.expenses.billsAndUtilities)}</span>
                     <span>{ratios.billsToIncome.toFixed(0)}%</span>
                 </div>
                 <div className="expense-category" onClick={() => setSelectedCategory('Cash/ATM')}>
                     <span>Cash/ATM</span>
-                    <span>${summary.expenses.cashAndATM.toFixed(0)}</span>
+                    <span>{formatAmount(summary.expenses.cashAndATM)}</span>
                     <span>{ratios.cashToIncome.toFixed(0)}%</span>
                 </div>
                 <div className="expense-category" onClick={() => setSelectedCategory('Checks')}>
                     <span>Checks</span>
-                    <span>${summary.expenses.checks.toFixed(0)}</span>
+                    <span>{formatAmount(summary.expenses.checks)}</span>
                     <span>{ratios.checksToIncome.toFixed(0)}%</span>
                 </div>
                 <div className="expense-category" onClick={() => setSelectedCategory('Credit Cards')}>
                     <span>Credit Cards</span>
-                    <span>${summary.expenses.creditCards.toFixed(0)}</span>
+                    <span>{formatAmount(summary.expenses.creditCards)}</span>
                     <span>{ratios.creditToIncome.toFixed(0)}%</span>
                 </div>
                 <div className="expense-category" onClick={() => setSelectedCategory('Other')}>
                     <span>Other</span>
-                    <span>${summary.expenses.other.toFixed(0)}</span>
+                    <span>{formatAmount(summary.expenses.other)}</span>
                     <span>{ratios.otherToIncome.toFixed(0)}%</span>
                 </div>
             </section>
@@ -97,7 +98,7 @@ export function TransactionSummary({ transactions }) {
                                 <tr key={i}>
                                     <td>{trans.date}</td>
                                     <td>{trans.description}</td>
-                                    <td>${trans.amount.toFixed(0)}</td>
+                                    <td>{formatAmount(trans.amount)}</td>
                                 </tr>
                             ))}
                         </tbody>
