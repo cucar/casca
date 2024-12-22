@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import { TransactionSummary } from './TransactionSummary';
 
 function App() {
   const [file, setFile] = useState(null);
@@ -83,36 +84,9 @@ function App() {
 
       {!loading && result && (
         <div className="results">
-          <h2>Extracted Data</h2>
-          
           {result.transactions?.length > 0 && (
-            <div className="transactions">
-              <h3>Transactions</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.transactions.map((tx, i) => (
-                    <tr key={i}>
-                      <td>{tx.date}</td>
-                      <td>{tx.description}</td>
-                      <td>{tx.category}</td>
-                      <td>{tx.type}</td>
-                      <td>{tx.amount.toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <TransactionSummary transactions={result.transactions} />
           )}
-
         </div>
       )}
     </div>
