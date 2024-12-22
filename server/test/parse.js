@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import Parser from '../Parser.js';
 
 const fileName = 'test4';
