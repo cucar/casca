@@ -3,12 +3,29 @@ import { useState } from 'react';
 import { aggregateTransactions, calculateRatios } from './transactionAggregator.js';
 import { formatAmount } from './utils.js';
 
+const HIGH_EXPENSE_THRESHOLD = 30;
+
 export function TransactionSummary({ transactions }) {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const summary = aggregateTransactions(transactions);
     const ratios = calculateRatios(summary);
 
     const hasWithdrawalWarning = summary.totalWithdrawals > summary.totalDeposits;
+
+    const renderExpenseCategory = (category, amount, ratio, label) => (
+        <>
+            <div className="expense-category" onClick={() => setSelectedCategory(category)}>
+                <span>{label}</span>
+                <span>{formatAmount(amount)}</span>
+                <span>{ratio.toFixed(0)}%</span>
+            </div>
+            {ratio > HIGH_EXPENSE_THRESHOLD && (
+                <div className="warning-message">
+                    ⚠️ High expense ({ratio.toFixed(0)}% of income)
+                </div>
+            )}
+        </>
+    );
 
     return (
         <div className="transaction-summary">
@@ -30,12 +47,12 @@ export function TransactionSummary({ transactions }) {
             </section>
 
             {/* Withdrawals Section */}
-            <h2>
-                Withdrawals: {formatAmount(summary.totalWithdrawals)}
-                {hasWithdrawalWarning && (
-                    <span className="warning-icon" title="Withdrawals exceed deposits">⚠️</span>
-                )}
-            </h2>
+            <h2>Withdrawals: {formatAmount(summary.totalWithdrawals)}</h2>
+            {hasWithdrawalWarning && (
+                <div className="warning-message">
+                    ⚠️ Warning: Withdrawals exceed deposits
+                </div>
+            )}
 
             {/* Expenses Section */}
             <section className="expenses-section">
@@ -44,41 +61,13 @@ export function TransactionSummary({ transactions }) {
                     <span>Amount</span>
                     <span>Income %</span>
                 </div>
-                <div className="expense-category" onClick={() => setSelectedCategory('Rent')}>
-                    <span>Rent</span>
-                    <span>{formatAmount(summary.expenses.rent)}</span>
-                    <span>{ratios.rent.toFixed(0)}%</span>
-                </div>
-                <div className="expense-category" onClick={() => setSelectedCategory('Mortgage/Loans')}>
-                    <span>Loans</span>
-                    <span>{formatAmount(summary.expenses.mortgageAndLoans)}</span>
-                    <span>{ratios.debtToIncome.toFixed(0)}%</span>
-                </div>
-                <div className="expense-category" onClick={() => setSelectedCategory('Bills/Utilities')}>
-                    <span>Bills/Utilities</span>
-                    <span>{formatAmount(summary.expenses.billsAndUtilities)}</span>
-                    <span>{ratios.billsToIncome.toFixed(0)}%</span>
-                </div>
-                <div className="expense-category" onClick={() => setSelectedCategory('Cash/ATM')}>
-                    <span>Cash/ATM</span>
-                    <span>{formatAmount(summary.expenses.cashAndATM)}</span>
-                    <span>{ratios.cashToIncome.toFixed(0)}%</span>
-                </div>
-                <div className="expense-category" onClick={() => setSelectedCategory('Checks')}>
-                    <span>Checks</span>
-                    <span>{formatAmount(summary.expenses.checks)}</span>
-                    <span>{ratios.checksToIncome.toFixed(0)}%</span>
-                </div>
-                <div className="expense-category" onClick={() => setSelectedCategory('Credit Cards')}>
-                    <span>Credit Cards</span>
-                    <span>{formatAmount(summary.expenses.creditCards)}</span>
-                    <span>{ratios.creditToIncome.toFixed(0)}%</span>
-                </div>
-                <div className="expense-category" onClick={() => setSelectedCategory('Other')}>
-                    <span>Other</span>
-                    <span>{formatAmount(summary.expenses.other)}</span>
-                    <span>{ratios.otherToIncome.toFixed(0)}%</span>
-                </div>
+                {renderExpenseCategory('Rent', summary.expenses.rent, ratios.rent, 'Rent')}
+                {renderExpenseCategory('Mortgage/Loans', summary.expenses.mortgageAndLoans, ratios.debtToIncome, 'Loans')}
+                {renderExpenseCategory('Bills/Utilities', summary.expenses.billsAndUtilities, ratios.billsToIncome, 'Bills/Utilities')}
+                {renderExpenseCategory('Cash/ATM', summary.expenses.cashAndATM, ratios.cashToIncome, 'Cash/ATM')}
+                {renderExpenseCategory('Checks', summary.expenses.checks, ratios.checksToIncome, 'Checks')}
+                {renderExpenseCategory('Credit Cards', summary.expenses.creditCards, ratios.creditToIncome, 'Credit Cards')}
+                {renderExpenseCategory('Other', summary.expenses.other, ratios.otherToIncome, 'Other')}
             </section>
 
             {/* Transaction details dialog */}

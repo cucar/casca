@@ -216,3 +216,12 @@ tr:hover {
   background: #e9ecef;
   border-radius: 4px;
 }
+
+.warning-message {
+  color: #dc3545;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
