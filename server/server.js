@@ -27,11 +27,25 @@ app.post('/api/extract', upload.single('statement'), async (req, res) => {
         for (const page of pages) {
             const result = await extractor.extractPage(page);
             transactions.push(...result.transactions);
-            checks.push(...result.checks);
+            // Merge checks with same check number
+            result.checks.forEach(check => {
+                const existingCheck = checks.find(c => c.checkNumber === check.checkNumber);
+                if (existingCheck) Object.assign(existingCheck, check);
+                else checks.push(check);
+            });
         }
 
-        // Return the extracted transactions and checks
-        res.json({ transactions, checks });
+        // now, add the checks to the transactions
+        transactions.push(...checks.map(check => ({ 
+            date: check.date, 
+            description: `Check ${check.checkNumber ? `#${check.checkNumber}` : ''} ${check.payee ? `to ${check.payee}` : ''} ${check.for ? `for ${check.for}` : ''}`,
+            category: 'Checks', 
+            type: 'Withdrawal', 
+            amount: check.amount 
+        })));
+
+        // Return the extracted transactions
+        res.json({ transactions });
 
     } catch (error) {
         console.error('Extraction error:', error);

@@ -113,33 +113,6 @@ function App() {
             </div>
           )}
 
-          {result.checks?.length > 0 && (
-            <div className="checks">
-              <h3>Checks</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Check #</th>
-                    <th>Date</th>
-                    <th>Payee</th>
-                    <th>For</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.checks.map((check, i) => (
-                    <tr key={i}>
-                      <td>{check.checkNumber}</td>
-                      <td>{check.date}</td>
-                      <td>{check.payee}</td>
-                      <td>{check.for}</td>
-                      <td>${check.amount.toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
       )}
     </div>

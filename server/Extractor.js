@@ -44,7 +44,7 @@ IMPS: Immediate Payment System (money transfer used in India)
 
 # Checks
 
-Most bank statement pages contain only transactions, but some pages may contain checks to give more information about a check withdrawal transaction.
+Most bank statement pages contain only transactions, but some pages may contain checks, which are listed in a separate table or as invididual sections.
 Checks information should be extracted with the following fields: check_number, date, payee, amount, and for. 
 Return the transactions and checks in the bank statement page below as JSON. 
 Do NOT generate transactions for checks and do NOT generate checks for transactions. Return the transactions and checks from the statement as-is.
@@ -60,7 +60,6 @@ Do NOT generate transactions for checks and do NOT generate checks for transacti
                 date: { type: 'string', description: 'Transaction Date' },
                 description: { type: 'string', description: 'Transaction Description' },
                 category: { type: 'string', description: 'Transaction Category', enum: [ 'Rent', 'Salary', 'Income', 'Bills/Utilities', 'Credit cards', 'Cash/ATM', 'Checks', 'Mortgage/Loans', 'Other Expenses' ] },
-                checkNumber: { type: 'string', description: 'Check Number' },
                 type: { type: 'string', description: 'Transaction Type', enum: [ 'Deposit', 'Withdrawal' ] },
                 amount: { type: 'number', description: 'Transaction Amount' }
             }),
@@ -92,14 +91,14 @@ Do NOT generate transactions for checks and do NOT generate checks for transacti
     /**
      * calls open AI to extract content from a page with a structured output
      */
-    async extractPage(pageContent) {
+    async extractPage(pageContent, noCache = false) {
 
         // assign a unique id to the page based on its contents
         const pageId = md5(pageContent);
         console.log('extracting pageId', pageId);
 
         // check if the page data is already cached and return the cached data if it is
-        if (this.isCached(pageId)) return this.getCached(pageId);
+        if (!noCache && this.isCached(pageId)) return this.getCached(pageId);
 
         // call open AI to extract content from the page
         const completion = await this.openai.chat.completions.create({ 
