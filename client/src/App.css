@@ -73,8 +73,8 @@ h1 {
 .file-label {
   display: block;
   padding: 1rem;
-  background-color: #f5f5f5;
-  border: 2px dashed #ccc;
+  background-color: dimgray;
+  border: 2px solid #ccc;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;
@@ -101,7 +101,7 @@ h1 {
 }
 
 .submit-button:disabled {
-  background-color: #ccc;
+  background-color: lightsteelblue;
   cursor: not-allowed;
 }
 

@@ -27,7 +27,7 @@ function App() {
     setError(null);
     
     try {
-      const response = await fetch('http://localhost:3000/api/extract', { method: 'POST', body: formData });
+      const response = await fetch('/api/extract', { method: 'POST', body: formData });
 
       if (!response.ok) {
         throw new Error('Failed to process file');
@@ -45,7 +45,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Bank Statement Extractor</h1>
+      <h1>Bank Statement Analyzer</h1>
       
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="file-input-container">
@@ -65,7 +65,7 @@ function App() {
           disabled={loading || !file}
           className="submit-button"
         >
-          {loading ? 'Processing...' : 'Extract Data'}
+          {loading ? 'Processing...' : 'Analyze'}
         </button>
 
         {loading && (
