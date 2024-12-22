@@ -30,7 +30,33 @@ export function TransactionSummary({ transactions }) {
         );
     };
 
-    return (
+    return <>
+        {/* Transaction details dialog */}
+        {selectedCategory && (
+            <dialog open onClose={() => setSelectedCategory(null)}>
+                <h3>{selectedCategory} Transactions</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {summary.categoryTransactions[selectedCategory]?.map((trans, i) => (
+                            <tr key={i}>
+                                <td>{trans.date}</td>
+                                <td>{trans.description}</td>
+                                <td>{formatAmount(trans.amount)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <button onClick={() => setSelectedCategory(null)}>Close</button>
+            </dialog>
+        )}
+
         <div className="transaction-summary">
             {/* Income Section */}
             <section className="income-section">
@@ -74,36 +100,11 @@ export function TransactionSummary({ transactions }) {
                 {renderExpenseCategory('Cash/ATM', summary.expenses.cashAndATM, ratios.cashToIncome, 'Cash/ATM')}
                 {renderExpenseCategory('Checks', summary.expenses.checks, ratios.checksToIncome, 'Checks')}
                 {renderExpenseCategory('Credit Cards', summary.expenses.creditCards, ratios.creditToIncome, 'Credit Cards')}
-                {renderExpenseCategory('Other', summary.expenses.other, ratios.otherToIncome, 'Other Expense')}
+                {renderExpenseCategory('Other Expenses', summary.expenses.other, ratios.otherToIncome, 'Other Expenses')}
             </section>
 
-            {/* Transaction details dialog */}
-            {selectedCategory && (
-                <dialog open onClose={() => setSelectedCategory(null)}>
-                    <h3>{selectedCategory} Transactions</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {summary.categoryTransactions[selectedCategory]?.map((trans, i) => (
-                                <tr key={i}>
-                                    <td>{trans.date}</td>
-                                    <td>{trans.description}</td>
-                                    <td>{formatAmount(trans.amount)}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <button onClick={() => setSelectedCategory(null)}>Close</button>
-                </dialog>
-            )}
         </div>
-    );
+    </>;
 }
 
 TransactionSummary.propTypes = {
