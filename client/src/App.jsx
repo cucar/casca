@@ -81,7 +81,7 @@ function App() {
         </div>
       )}
 
-      {result && (
+      {!loading && result && (
         <div className="results">
           <h2>Extracted Data</h2>
           
@@ -105,7 +105,7 @@ function App() {
                       <td>{tx.description}</td>
                       <td>{tx.category}</td>
                       <td>{tx.type}</td>
-                      <td>${tx.amount.toFixed(2)}</td>
+                      <td>{tx.amount.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>

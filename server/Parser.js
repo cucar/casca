@@ -15,7 +15,7 @@ export default class Parser {
     /**
      * parse a file and return the markdown content for its pages
      */
-    async parse(fileContent, fileName) {
+    async parse(fileContent) {
 
         // assign a unique id to the file based on its contents
         const fileId = md5(fileContent);
@@ -24,7 +24,7 @@ export default class Parser {
         if (this.isCached(fileId)) return this.getCached(fileId);
 
         // parse the file and retrieve markdown content
-        const documents = await this.parser.loadDataAsContent(fileContent, fileName);
+        const documents = await this.parser.loadDataAsContent(fileContent, `${fileId}.pdf`);
 
         // save the markdown content to the cache and return it from the cache
         this.saveCached(fileId, documents.map(doc => doc.text));
@@ -62,7 +62,7 @@ export default class Parser {
      * returns the cached file parsed into pages
      */
     getCached(fileId) {
-        return readdirSync(this.getCacheFolder(fileId)).map(pageFile => readFileSync(`${this.getCacheFolder(fileId)}/${pageFile}`));
+        return readdirSync(this.getCacheFolder(fileId)).map(pageFile => readFileSync(`${this.getCacheFolder(fileId)}/${pageFile}`, 'utf8'));
     }
 
 }

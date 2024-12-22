@@ -96,6 +96,7 @@ Do NOT generate transactions for checks and do NOT generate checks for transacti
 
         // assign a unique id to the page based on its contents
         const pageId = md5(pageContent);
+        console.log('extracting pageId', pageId);
 
         // check if the page data is already cached and return the cached data if it is
         if (this.isCached(pageId)) return this.getCached(pageId);
@@ -148,14 +149,15 @@ Do NOT generate transactions for checks and do NOT generate checks for transacti
      * saves a page transaction and check data to the cache
      */
     saveCached(pageId, transactionsAndChecks) {
-        writeFileSync(this.getCacheFile(pageId), JSON.stringify(transactionsAndChecks));
+        console.log('extracted page - saving to cache', pageId);
+        writeFileSync(this.getCacheFile(pageId), transactionsAndChecks);
     }
 
     /**
      * returns the cached transactions and checks in a page
      */
     getCached(pageId) {
-        return JSON.parse(readFileSync(this.getCacheFile(pageId)));
+        return JSON.parse(readFileSync(this.getCacheFile(pageId), 'utf-8'));
     }
     
 }

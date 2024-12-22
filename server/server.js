@@ -1,5 +1,5 @@
 import express from 'express';
-
+import multer from 'multer';
 import Parser from './Parser.js';
 import Extractor from './Extractor.js';
 
@@ -7,18 +7,19 @@ const app = express();
 const parser = new Parser();
 const extractor = new Extractor();
 
-// Parse raw body for file uploads - max 50mb
-app.use('/api/extract', express.raw({ type: '*/*', limit: '50mb' }));
+// Configure multer to store files in memory
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Endpoint to handle file upload and extraction
-app.post('/api/extract', async (req, res) => {
+app.post('/api/extract', upload.single('statement'), async (req, res) => {
     try {
-        if (!req.body || !req.body.length) {
+        if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        // Pass the raw buffer (Uint8Array) directly to the parser
-        const pages = await parser.parse(req.body);
+        // Pass the file buffer to the parser
+        const pages = await parser.parse(req.file.buffer);
+        console.log(`parsed ${pages.length} pages`);
 
         // Extract transactions and checks from each page
         const transactions = [];
