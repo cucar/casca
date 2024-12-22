@@ -47,7 +47,10 @@ function App() {
   return (
     <div className="container">
       <h1>Bank Statement Analyzer</h1>
-      
+      <p>
+        Please select a bank statement by clicking the button below and click Submit button to get a summary of the transactions. 
+        It may take 1-2 minutes for a new statement to be analyzed.
+      </p>
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="file-input-container">
           <input
@@ -66,7 +69,7 @@ function App() {
           disabled={loading || !file}
           className="submit-button"
         >
-          {loading ? 'Processing...' : 'Analyze'}
+          {loading ? 'Processing...' : 'Submit'}
         </button>
 
         {loading && (
