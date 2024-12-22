@@ -12,20 +12,23 @@ export function TransactionSummary({ transactions }) {
 
     const hasWithdrawalWarning = summary.totalWithdrawals > summary.totalDeposits;
 
-    const renderExpenseCategory = (category, amount, ratio, label) => (
-        <>
-            <div className="expense-category" onClick={() => setSelectedCategory(category)}>
-                <span>{label}</span>
-                <span>{formatAmount(amount)}</span>
-                <span>{ratio.toFixed(0)}%</span>
-            </div>
-            {ratio > HIGH_EXPENSE_THRESHOLD && (
-                <div className="warning-message">
-                    ⚠️ High expense ({ratio.toFixed(0)}% of income)
+    const renderExpenseCategory = (category, amount, ratio, label) => {
+        if (amount === 0) return null;
+        return (
+            <>
+                <div className="expense-category" onClick={() => setSelectedCategory(category)}>
+                    <span>{label}</span>
+                    <span>{formatAmount(amount)}</span>
+                    <span>{ratio.toFixed(0)}%</span>
                 </div>
-            )}
-        </>
-    );
+                {ratio > HIGH_EXPENSE_THRESHOLD && (
+                    <div className="warning-message">
+                        ⚠️ High expense ({ratio.toFixed(0)}% of income)
+                    </div>
+                )}
+            </>
+        );
+    };
 
     return (
         <div className="transaction-summary">
@@ -36,14 +39,18 @@ export function TransactionSummary({ transactions }) {
                     <span>Category</span>
                     <span>Amount</span>
                 </div>
-                <div className="income-details" onClick={() => setSelectedCategory('Salary')}>
-                    <span>Salary</span>
-                    <span>{formatAmount(summary.income.salary)}</span>
-                </div>
-                <div className="income-details" onClick={() => setSelectedCategory('OtherIncome')}>
-                    <span>Other Income</span>
-                    <span>{formatAmount(summary.income.other)}</span>
-                </div>
+                {summary.income.salary > 0 && (
+                    <div className="income-details" onClick={() => setSelectedCategory('Salary')}>
+                        <span>Salary</span>
+                        <span>{formatAmount(summary.income.salary)}</span>
+                    </div>
+                )}
+                {summary.income.other > 0 && (
+                    <div className="income-details" onClick={() => setSelectedCategory('Income')}>
+                        <span>Other Income</span>
+                        <span>{formatAmount(summary.income.other)}</span>
+                    </div>
+                )}
             </section>
 
             {/* Withdrawals Section */}
@@ -67,7 +74,7 @@ export function TransactionSummary({ transactions }) {
                 {renderExpenseCategory('Cash/ATM', summary.expenses.cashAndATM, ratios.cashToIncome, 'Cash/ATM')}
                 {renderExpenseCategory('Checks', summary.expenses.checks, ratios.checksToIncome, 'Checks')}
                 {renderExpenseCategory('Credit Cards', summary.expenses.creditCards, ratios.creditToIncome, 'Credit Cards')}
-                {renderExpenseCategory('Other', summary.expenses.other, ratios.otherToIncome, 'Other')}
+                {renderExpenseCategory('Other', summary.expenses.other, ratios.otherToIncome, 'Other Expense')}
             </section>
 
             {/* Transaction details dialog */}
