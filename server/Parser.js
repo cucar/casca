@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import md5 from 'md5';
-import { LlamaParseReader } from 'llamaindex';
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { LlamaParseReader } from 'llamaindex';
 
 export default class Parser {
 
@@ -35,7 +35,7 @@ export default class Parser {
      * returns the file cache folder
      */
     getCacheFolder(fileId) {
-        return `./cache/${fileId}`;
+        return `./cache/parser/${fileId}`;
     }
 
     /**
@@ -62,7 +62,7 @@ export default class Parser {
      * returns the cached file parsed into pages
      */
     getCached(fileId) {
-        return readdirSync(`./cache/${fileId}`).map(pageFile => readFileSync(`./cache/${fileId}/${pageFile}`));
+        return readdirSync(this.getCacheFolder(fileId)).map(pageFile => readFileSync(`${this.getCacheFolder(fileId)}/${pageFile}`));
     }
 
 }
