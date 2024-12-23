@@ -1,3 +1,4 @@
 node_modules
 .env
 cache
+test/files/eStmt_2024-12-19.pdf
