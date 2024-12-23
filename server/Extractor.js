@@ -19,7 +19,20 @@ class Extractor {
         return `
 Below is a page of a bank statement. Your job is to parse it and extract transactions in it.
 
-Transaction information should be extracted with the following fields: date, description, category (more on that below), check number (if applicable), type (if it is a deposit or a withdrawal), and amount. Each transaction may be given as a single line or in 2 lines. If transactions are given in 2 lines, use the information in the second line as part of description and append to it. It may be used for extracting more information about the transaction. 
+Transaction information should be extracted with the following fields: 
+date, description, category (more on that below), check number (if applicable), type (if it is a deposit or a withdrawal), and amount. 
+Each transaction may be given as a single line or in 2 lines. 
+If transactions are given in 2 lines, use the information in the second line as part of description and append to it. 
+It may be used for extracting more information about the transaction. 
+
+# Transaction type (deposit or withdrawal):
+
+This is a very important field. It is the type of the transaction, not the category. 
+You have to get this one right. This information may be provided in different formats in the statement. 
+It may be difficult to determine from the description of the transaction, but sometimes there are clues for it (like transfer "from" or "to" another account).
+It is best to check the statement format for this.
+It may be inferred from the sign of the amount (negative for withdrawal, positive for deposit). 
+It may be inferred from the column of the transaction (In/Out or Deposit/Withdrawal).
 
 # Transaction category:
 
@@ -30,11 +43,11 @@ Income: Any deposit that is not Salary.
 
 Rent: Usually a larger amount withdrawal, relative to the other transactions. Usually once a month. It may be a check or ACH. If it is a rent check, use rent category, not check category.
 Mortgage/Loans: Similar to rent, usually a large amount withdrawal, once a month. Should see either a rent or mortgage for most people in a bank statement, at least once. May include words like Mortgage, Loan, etc.
-Bills/Utilities: Regular widthdrawals, usually once a month. May include words like BILL, BILLPAY, Water, Electricity, Phone, HOA, etc.
+Bills/Utilities: Regular widthdrawals, usually once a month. May include words like BILL, BILLPAY, Bill Payment, Water, Electricity, Phone, HOA, etc.
 Credit Cards: Smaller withdrawals with varied amounts. May include words like POS, VISA, MASTERCARD, AMEX, DISCOVER, etc.
-Cash: Cash withdrawals. Usually even amounts like 20, 100, 50, etc. May include words like CSH or ATM.
+Cash/ATM: Cash withdrawals. Usually even amounts like 20, 100, 50, etc. May include words like CSH or ATM.
 Checks: Checks presented by the account owner. May be shown in a separate table. May include words like cheque, chk, chq, etc. Should include a check number (more on that below).
-Other: Any other withdrawal that does not fall into one of the categegories above. 
+Other Expenses: Any other withdrawal that does not fall into one of the categegories above. 
 
 # Relevant Terminology
 
@@ -59,7 +72,7 @@ Do NOT generate transactions for checks and do NOT generate checks for transacti
             transaction: this.schemaObject('Transaction information', {
                 date: { type: 'string', description: 'Transaction Date' },
                 description: { type: 'string', description: 'Transaction Description' },
-                category: { type: 'string', description: 'Transaction Category', enum: [ 'Rent', 'Salary', 'Income', 'Bills/Utilities', 'Credit cards', 'Cash/ATM', 'Checks', 'Mortgage/Loans', 'Other Expenses' ] },
+                category: { type: 'string', description: 'Transaction Category', enum: [ 'Rent', 'Salary', 'Income', 'Bills/Utilities', 'Credit Cards', 'Cash/ATM', 'Checks', 'Mortgage/Loans', 'Other Expenses' ] },
                 type: { type: 'string', description: 'Transaction Type', enum: [ 'Deposit', 'Withdrawal' ] },
                 amount: { type: 'number', description: 'Transaction Amount' }
             }),

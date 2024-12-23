@@ -25,6 +25,7 @@ export default class Parser {
 
         // parse the file and retrieve markdown content
         const documents = await this.parser.loadDataAsContent(fileContent, `${fileId}.pdf`);
+        if (documents.length === 0) throw new Error('Error parsing statement.');
 
         // save the markdown content to the cache and return it from the cache
         this.saveCached(fileId, documents.map(doc => doc.text));

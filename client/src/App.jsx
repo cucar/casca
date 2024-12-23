@@ -29,11 +29,7 @@ function App() {
     
     try {
       const response = await fetch('/api/extract', { method: 'POST', body: formData });
-
-      if (!response.ok) {
-        throw new Error('Failed to process file');
-      }
-
+      if (!response.ok) throw new Error('Failed to process file');
       const result = await response.json();
       if (result.error) throw new Error(result.error); // show error if there is one
       setResult(result);

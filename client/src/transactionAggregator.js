@@ -20,44 +20,56 @@ export function aggregateTransactions(transactions) {
     };
 
     transactions.forEach(trans => {
-        // Group transactions by category for easy access in dialogs
-        if (!summary.categoryTransactions[trans.category]) {
-            summary.categoryTransactions[trans.category] = [];
-        }
-        summary.categoryTransactions[trans.category].push(trans);
 
+        // start with the category coming from the parser, but we may need to adjust it in case it is not consistent with the type of transaction
+        let category = trans.category;
+
+        // determine the category and add to the transaction category sums 
         if (trans.type === 'Deposit') {
             summary.totalDeposits += trans.amount;
             if (trans.category === 'Salary') {
                 summary.income.salary += trans.amount;
+                category = 'Salary';
             } else {
                 summary.income.other += trans.amount;
+                category = 'Income';
             }
         } else {
             summary.totalWithdrawals += trans.amount;
             switch (trans.category) {
                 case 'Rent':
                     summary.expenses.rent += trans.amount;
+                    category = 'Rent';
                     break;
                 case 'Mortgage/Loans':
                     summary.expenses.mortgageAndLoans += trans.amount;
+                    category = 'Mortgage/Loans';
                     break;
                 case 'Bills/Utilities':
                     summary.expenses.billsAndUtilities += trans.amount;
+                    category = 'Bills/Utilities';
                     break;
                 case 'Cash/ATM':
                     summary.expenses.cashAndATM += trans.amount;
+                    category = 'Cash/ATM';
                     break;
                 case 'Checks':
                     summary.expenses.checks += trans.amount;
+                    category = 'Checks';
                     break;
                 case 'Credit Cards':
                     summary.expenses.creditCards += trans.amount;
+                    category = 'Credit Cards';
                     break;
                 default:
+                    category = 'Other Expenses';
                     summary.expenses.other += trans.amount;
             }
         }
+
+        // Group transactions by category for easy access in dialogs
+        if (!summary.categoryTransactions[category]) summary.categoryTransactions[category] = [];
+        summary.categoryTransactions[category].push(trans);
     });
 
     summary.income.total = summary.income.salary + summary.income.other;

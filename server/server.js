@@ -48,8 +48,9 @@ app.post('/api/extract', upload.single('statement'), async (req, res) => {
         res.json({ transactions });
 
     } catch (error) {
+        // note that we are not returning 500 status to the client, as it would cause the client to not display the error message
         console.error('Extraction error:', error);
-        res.status(500).json({ error: error.message || 'Failed to process file' });
+        res.json({ error: error.message || 'Failed to process file' });
     }
 });
 

@@ -34,7 +34,7 @@ export function TransactionSummary({ transactions }) {
         {/* Transaction details dialog */}
         {selectedCategory && (
             <dialog open onClose={() => setSelectedCategory(null)}>
-                <h3>{selectedCategory} Transactions</h3>
+                <h3>{selectedCategory === 'Credit Cards' ? 'Debit/Credit Cards' : selectedCategory} Transactions</h3>
                 <table>
                     <thead>
                         <tr>
@@ -99,7 +99,7 @@ export function TransactionSummary({ transactions }) {
                 {renderExpenseCategory('Bills/Utilities', summary.expenses.billsAndUtilities, ratios.billsToIncome, 'Bills/Utilities')}
                 {renderExpenseCategory('Cash/ATM', summary.expenses.cashAndATM, ratios.cashToIncome, 'Cash/ATM')}
                 {renderExpenseCategory('Checks', summary.expenses.checks, ratios.checksToIncome, 'Checks')}
-                {renderExpenseCategory('Credit Cards', summary.expenses.creditCards, ratios.creditToIncome, 'Credit Cards')}
+                {renderExpenseCategory('Credit Cards', summary.expenses.creditCards, ratios.creditToIncome, 'Debit/Credit Cards')}
                 {renderExpenseCategory('Other Expenses', summary.expenses.other, ratios.otherToIncome, 'Other Expenses')}
             </section>
 
